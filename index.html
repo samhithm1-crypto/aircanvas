@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AirCanvas - AI Hand Drawing</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- MediaPipe libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <!-- Video element (hidden) -->
+    <video class="input_video" style="display: none;"></video>
+
+    <!-- Main Workspace -->
+    <div class="workspace">
+        <canvas class="output_canvas"></canvas>
+    </div>
+
+    <!-- UI Overlay container -->
+    <div class="ui-overlay">
+
+        <!-- Top Status Bar -->
+        <div class="top-bar">
+            <div class="logo">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> AirCanvas
+            </div>
+
+            <div id="gesture-status" class="status-badge loading">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                <span id="mode-text">Loading Model...</span>
+            </div>
+        </div>
+
+        <!-- Bottom Layout -->
+        <div class="bottom-panels">
+            <!-- Floating Controls Panel -->
+            <div class="glass-panel controls-panel">
+                <div class="control-group">
+                    <div class="control-label">Color</div>
+                    <!-- RGB Spectrum bar -->
+                    <div class="rgb-bar-wrap">
+                        <canvas id="rgb-bar" class="rgb-bar" width="220" height="22"></canvas>
+                        <div id="rgb-cursor" class="rgb-cursor"></div>
+                    </div>
+                    <!-- Quick swatches -->
+                    <div class="color-palette">
+                        <div class="color-swatch active" style="background-color: #ef4444;" data-color="#ef4444"></div>
+                        <div class="color-swatch" style="background-color: #f97316;" data-color="#f97316"></div>
+                        <div class="color-swatch" style="background-color: #facc15;" data-color="#facc15"></div>
+                        <div class="color-swatch" style="background-color: #22c55e;" data-color="#22c55e"></div>
+                        <div class="color-swatch" style="background-color: #3b82f6;" data-color="#3b82f6"></div>
+                        <div class="color-swatch" style="background-color: #a855f7;" data-color="#a855f7"></div>
+                        <div class="color-swatch" style="background-color: #ffffff;" data-color="#ffffff"></div>
+                        <div class="color-swatch" style="background-color: #000000;" data-color="#000000"></div>
+                        <input type="color" id="custom-color" class="custom-color-picker" value="#ef4444">
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="control-group">
+                    <div class="control-label">Brush Size</div>
+                    <div class="slider-container">
+                        <i class="fa-solid fa-pen" style="font-size: 0.8rem;"></i>
+                        <input type="range" id="size-slider" min="2" max="40" value="8">
+                        <i class="fa-solid fa-pen" style="font-size: 1.2rem;"></i>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="actions">
+                    <button id="toggle-tracking-btn" class="action-btn toggle-btn">
+                        <i class="fa-solid fa-pause"></i> Pause
+                    </button>
+                    <button id="clear-btn" class="action-btn danger">
+                        <i class="fa-solid fa-trash-can"></i> Clear
+                    </button>
+                </div>
+            </div>
+
+            <!-- Instructions Panel -->
+            <div class="glass-panel instructions-panel">
+                <h3><i class="fa-solid fa-circle-info"></i> How to use</h3>
+                <ul>
+                    <li><i class="fa-solid fa-hand-pointer"></i> <strong>Draw:</strong> Index finger up</li>
+                    <li><i class="fa-solid fa-hand-scissors"></i> <strong>Erase:</strong> Index + Middle up</li>
+                    <li><i class="fa-solid fa-hand-back-fist"></i> <strong>Hover:</strong> Fist or open hand</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+        <h2>Initializing AI Models...</h2>
+        <p>Please wait a moment while the hand tracking engine loads.</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
